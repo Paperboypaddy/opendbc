@@ -76,7 +76,7 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
       return self.update_canfd(can_parsers)
 
     ret = structs.CarState()
-    cp_cruise = cp_cam if self.CP.flags in (CAMERA_SCC_CAR | (NON_SCC_FCA_CAR - NON_SCC_RADAR_FCA_CAR)) else cp
+    cp_cruise = cp_cam if self.CP.flags & HyundaiFlags.CAMERA_SCC else cp
     self.is_metric = cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"] == 0
     speed_conv = CV.KPH_TO_MS if self.is_metric else CV.MPH_TO_MS
 
