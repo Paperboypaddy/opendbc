@@ -7,11 +7,12 @@ from opendbc.can.can_define import CANDefine
 from opendbc.car import Bus, create_button_events, structs
 from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.hyundai.hyundaicanfd import CanBus
-from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, Buttons, CarControllerParams
+from opendbc.car.hyundai.values import HyundaiFlags, CAR, DBC, Buttons, CarControllerParams, CAMERA_SCC_CAR, NON_SCC_CAR, NON_SCC_FCA_CAR, NON_SCC_RADAR_FCA_CAR
 from opendbc.car.interfaces import CarStateBase
 
 from opendbc.sunnypilot.car.hyundai.escc import EsccCarStateBase
 from opendbc.sunnypilot.car.hyundai.mads import MadsCarState
+from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
 
 ButtonType = structs.CarState.ButtonEvent.Type
 
@@ -75,7 +76,7 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
       return self.update_canfd(can_parsers)
 
     ret = structs.CarState()
-    cp_cruise = cp_cam if self.CP.flags & HyundaiFlags.CAMERA_SCC else cp
+    cp_cruise = cp_cam if self.CP.flags in (CAMERA_SCC_CAR | (NON_SCC_FCA_CAR - NON_SCC_RADAR_FCA_CAR)) else cp
     self.is_metric = cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"] == 0
     speed_conv = CV.KPH_TO_MS if self.is_metric else CV.MPH_TO_MS
 
@@ -122,6 +123,16 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
       # These are not used for engage/disengage since openpilot keeps track of state using the buttons
       ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0
       ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1
+      ret.cruiseState.standstill = False
+      ret.cruiseState.nonAdaptive = False
+    elif self.CP.carFingerprint in NON_SCC_CAR:
+      cruise_available_msg = "E_CRUISE_CONTROL" if self.CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV) else "EMS16"
+      cruise_enabled_msg = "E_CRUISE_CONTROL" if self.CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV) else "LVR12"
+      cruise_speed_msg = "ELECT_GEAR" if self.CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV) else "LVR12"
+      cruise_speed_sig = "VSetDis" if self.CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV) else "CF_Lvr_CruiseSet"
+      ret.cruiseState.available = cp.vl[cruise_available_msg]["CRUISE_LAMP_M"] != 0
+      ret.cruiseState.enabled = cp.vl[cruise_enabled_msg]["CF_Lvr_CruiseSet"] != 0
+      ret.cruiseState.speed = cp.vl[cruise_speed_msg][cruise_speed_sig] * speed_conv
       ret.cruiseState.standstill = False
       ret.cruiseState.nonAdaptive = False
     else:
@@ -181,7 +192,10 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
       ret.rightBlindspot = cp.vl["LCA11"]["CF_Lca_IndRight"] != 0
 
     # save the entire LKAS11 and CLU11
-    self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
+    self.lkas11 = None
+    if not self.CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS.value:
+      self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
+
     self.clu11 = copy.copy(cp.vl["CLU11"])
     self.steer_state = cp.vl["MDPS12"]["CF_Mdps_ToiActive"]  # 0 NOT ACTIVE, 1 ACTIVE
     prev_cruise_buttons = self.cruise_buttons[-1]
@@ -370,11 +384,12 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
       ("SAS11", 100),
     ]
 
-    if not CP.openpilotLongitudinalControl and not (CP.flags & HyundaiFlags.CAMERA_SCC):
-      pt_messages += [
-        ("SCC11", 50),
-        ("SCC12", 50),
-      ]
+    if not CP.openpilotLongitudinalControl and CP.carFingerprint not in (CAMERA_SCC_CAR | (NON_SCC_CAR - NON_SCC_RADAR_FCA_CAR)):
+      if CP.carFingerprint not in NON_SCC_CAR:
+        pt_messages += [
+          ("SCC11", 50),
+          ("SCC12", 50),
+        ]
       if CP.flags & HyundaiFlags.USE_FCA.value:
         pt_messages.append(("FCA11", 50))
 
@@ -393,6 +408,8 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
 
     if CP.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       pt_messages.append(("ELECT_GEAR", 20))
+      if CP.carFingerprint in NON_SCC_CAR:
+        pt_messages.append(("E_CRUISE_CONTROL", 10))
     elif CP.flags & HyundaiFlags.FCEV:
       pt_messages.append(("EMS20", 100))
     elif CP.flags & HyundaiFlags.CLUSTER_GEARS:
@@ -405,9 +422,12 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
     if CP.flags & HyundaiFlags.HAS_LDA_BUTTON:
       pt_messages.append(("BCM_PO_11", 50))
 
-    cam_messages = [
-      ("LKAS11", 100)
-    ]
+    cam_messages = []
+
+    if not CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS:
+      cam_messages += [
+        ("LKAS11", 100)
+      ]
 
     if CP.flags & HyundaiFlags.CAMERA_SCC:
       cam_messages += [

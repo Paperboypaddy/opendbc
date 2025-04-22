@@ -10,7 +10,26 @@ def create_lkas11(packer, frame, CP, apply_torque, steer_req,
                   left_lane, right_lane,
                   left_lane_depart, right_lane_depart,
                   lkas_icon):
-  values = {s: lkas11[s] for s in [
+  if not lkas11:
+        values = {
+      "CF_Lkas_LdwsActivemode": 0,
+      "CF_Lkas_LdwsSysState": 0,
+      "CF_Lkas_SysWarning": 0,
+      "CF_Lkas_LdwsLHWarning": 0,
+      "CF_Lkas_LdwsRHWarning": 0,
+      "CF_Lkas_HbaLamp": 0,
+      "CF_Lkas_FcwBasReq": 0,
+      "CF_Lkas_HbaSysState": 0,
+      "CF_Lkas_FcwOpt": 0,
+      "CF_Lkas_HbaOpt": 0,
+      "CF_Lkas_FcwSysState": 0,
+      "CF_Lkas_FcwCollisionWarning": 0,
+      "CF_Lkas_FusionState": 0,
+      "CF_Lkas_FcwOpt_USM": 0,
+      "CF_Lkas_LdwsOpt_USM": 2,
+    }
+  else:
+        values = {s: lkas11[s] for s in [
     "CF_Lkas_LdwsActivemode",
     "CF_Lkas_LdwsSysState",
     "CF_Lkas_SysWarning",
@@ -60,7 +79,7 @@ def create_lkas11(packer, frame, CP, apply_torque, steer_req,
     values["CF_Lkas_SysWarning"] = 4 if sys_warning else 0
 
   # Likely cars lacking the ability to show individual lane lines in the dash
-  elif CP.carFingerprint in (CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL):
+  elif CP.carFingerprint in (CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.HYUNDAI_IONIQ_NON_LKAS):
     # SysWarning 4 = keep hands on wheel + beep
     values["CF_Lkas_SysWarning"] = 4 if sys_warning else 0
 

@@ -297,6 +297,8 @@ class PlatformConfigBase(Freezable):
 
   flags: int = 0
 
+  spFlags: int = 0
+
   platform_str: str | None = None
 
   origin_car_docs: list[CarDocs] | list[ExtraCarDocs] = field(init=False)
@@ -360,3 +362,11 @@ class Platforms(str, ReprEnum, metaclass=PlatformsType):
   @classmethod
   def with_flags(cls, flags: IntFlag) -> set['Platforms']:
     return {p for p in cls if p.config.flags & flags}
+  
+  @classmethod
+  def with_sp_flags(cls, spFlags: IntFlag) -> set['Platforms']:
+    return {p for p in cls if p.config.spFlags & spFlags}
+
+  @classmethod
+  def without_sp_flags(cls, spFlags: IntFlag) -> set['Platforms']:
+    return {p for p in cls if not (p.config.spFlags & spFlags)}

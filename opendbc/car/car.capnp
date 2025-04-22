@@ -467,6 +467,7 @@ struct CarParams {
   enableBsm @56 :Bool;       # blind spot monitoring
   flags @64 :UInt32;         # flags for car specific quirks
   experimentalLongitudinalAvailable @71 :Bool;
+  spFlags @78 :UInt32;       # flags for car specific quirks in sunnypilot
 
   minEnableSpeed @7 :Float32;
   minSteerSpeed @8 :Float32;

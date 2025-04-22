@@ -8,6 +8,8 @@ from opendbc.car.structs import CarParams
 from opendbc.car.docs_definitions import CarFootnote, CarHarness, CarDocs, CarParts, Column
 from opendbc.car.fw_query_definitions import FwQueryConfig, Request, p16
 
+from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
+
 Ecu = CarParams.Ecu
 
 
@@ -595,6 +597,14 @@ class CAR(Platforms):
     flags=HyundaiFlags.RADAR_SCC,
   )
 
+  # Non-LKAS Cars
+  HYUNDAI_IONIQ_NON_LKAS = HyundaiPlatformConfig(
+    [HyundaiCarDocs("Hyundai Ioniq Hybrid Non-LKAS 2017-19", "No Lane Keep Assist Systems (LKAS)", car_parts=CarParts.common([CarHarness.hyundai_c]))],
+    HYUNDAI_IONIQ.specs,
+    flags=HyundaiFlags.HYBRID | HyundaiFlags.MIN_STEER_32_MPH,
+    spFlags=HyundaiFlagsSP.SP_NON_SCC | HyundaiFlagsSP.SP_NON_SCC_RADAR_FCA | HyundaiFlagsSP.SP_NON_LKAS,
+  )
+
 
 class Buttons:
   NONE = 0
@@ -800,5 +810,9 @@ LEGACY_SAFETY_MODE_CAR = CAR.with_flags(HyundaiFlags.LEGACY)
 # TODO: another PR with (HyundaiFlags.LEGACY | HyundaiFlags.UNSUPPORTED_LONGITUDINAL | HyundaiFlags.CAMERA_SCC |
 #       HyundaiFlags.CANFD_RADAR_SCC | HyundaiFlags.CANFD_NO_RADAR_DISABLE | )
 UNSUPPORTED_LONGITUDINAL_CAR = CAR.with_flags(HyundaiFlags.LEGACY) | CAR.with_flags(HyundaiFlags.UNSUPPORTED_LONGITUDINAL)
+
+NON_SCC_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC)
+NON_SCC_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC_FCA)
+NON_SCC_RADAR_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC_RADAR_FCA)
 
 DBC = CAR.create_dbc_map()

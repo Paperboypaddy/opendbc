@@ -23,3 +23,8 @@ class HyundaiFlagsSP(IntFlag):
   HAS_LFA_BUTTON = 2 # Deprecated in favor of HyundaiFlags.HAS_LDA_BUTTON
   LONGITUDINAL_MAIN_CRUISE_TOGGLEABLE = 2 ** 2
   ENABLE_RADAR_TRACKS = 2 ** 3
+  
+  NON_SCC = 2 ** 3
+  NON_SCC_FCA = 2 ** 4
+  NON_SCC_RADAR_FCA = 2 ** 5
+  NON_LKAS = 2 ** 9

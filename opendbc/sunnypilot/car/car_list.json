@@ -1219,6 +1219,18 @@
     ],
     "package": "Smart Cruise Control (SCC)"
   },
+  "Hyundai Ioniq Hybrid Non-LKAS 2017-19": {
+    "platform": "HYUNDAI_IONIQ_NON_LKAS",
+    "make": "Hyundai",
+    "brand": "hyundai",
+    "model": "Ioniq Hybrid",
+    "year": [
+      "2017",
+      "2018",
+      "2019"
+    ],
+    "package": "All"
+  },
   "Hyundai Ioniq Hybrid 2020-22": {
     "platform": "HYUNDAI_IONIQ_HEV_2022",
     "make": "Hyundai",
