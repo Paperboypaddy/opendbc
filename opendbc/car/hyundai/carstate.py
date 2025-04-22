@@ -193,7 +193,7 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
 
     # save the entire LKAS11 and CLU11
     self.lkas11 = None
-    if not self.CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS.value:
+    if not self.CP.spFlags & HyundaiFlagsSP.NON_LKAS.value:
       self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
 
     self.clu11 = copy.copy(cp.vl["CLU11"])
@@ -424,7 +424,7 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState):
 
     cam_messages = []
 
-    if not CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS:
+    if not CP.spFlags & HyundaiFlagsSP.NON_LKAS:
       cam_messages += [
         ("LKAS11", 100)
       ]

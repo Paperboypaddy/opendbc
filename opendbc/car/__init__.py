@@ -362,7 +362,7 @@ class Platforms(str, ReprEnum, metaclass=PlatformsType):
   @classmethod
   def with_flags(cls, flags: IntFlag) -> set['Platforms']:
     return {p for p in cls if p.config.flags & flags}
-  
+
   @classmethod
   def with_sp_flags(cls, spFlags: IntFlag) -> set['Platforms']:
     return {p for p in cls if p.config.spFlags & spFlags}

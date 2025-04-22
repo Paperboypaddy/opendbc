@@ -602,7 +602,7 @@ class CAR(Platforms):
     [HyundaiCarDocs("Hyundai Ioniq Hybrid Non-LKAS 2017-19", "No Lane Keep Assist Systems (LKAS)", car_parts=CarParts.common([CarHarness.hyundai_c]))],
     HYUNDAI_IONIQ.specs,
     flags=HyundaiFlags.HYBRID | HyundaiFlags.MIN_STEER_32_MPH,
-    spFlags=HyundaiFlagsSP.SP_NON_SCC | HyundaiFlagsSP.SP_NON_SCC_RADAR_FCA | HyundaiFlagsSP.SP_NON_LKAS,
+    spFlags=HyundaiFlagsSP.NON_SCC | HyundaiFlagsSP.NON_SCC_RADAR_FCA | HyundaiFlagsSP.NON_LKAS,
   )
 
 
