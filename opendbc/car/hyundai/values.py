@@ -811,8 +811,8 @@ LEGACY_SAFETY_MODE_CAR = CAR.with_flags(HyundaiFlags.LEGACY)
 #       HyundaiFlags.CANFD_RADAR_SCC | HyundaiFlags.CANFD_NO_RADAR_DISABLE | )
 UNSUPPORTED_LONGITUDINAL_CAR = CAR.with_flags(HyundaiFlags.LEGACY) | CAR.with_flags(HyundaiFlags.UNSUPPORTED_LONGITUDINAL)
 
-NON_SCC_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC)
-NON_SCC_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC_FCA)
-NON_SCC_RADAR_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.SP_NON_SCC_RADAR_FCA)
+NON_SCC_CAR = CAR.with_sp_flags(HyundaiFlagsSP.NON_SCC)
+NON_SCC_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.NON_SCC_FCA)
+NON_SCC_RADAR_FCA_CAR = CAR.with_sp_flags(HyundaiFlagsSP.NON_SCC_RADAR_FCA)
 
 DBC = CAR.create_dbc_map()
