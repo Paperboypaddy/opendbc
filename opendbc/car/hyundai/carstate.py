@@ -189,6 +189,7 @@ class CarState(CarStateBase, EsccCarStateBase, MadsCarState, CarStateExt):
     # save the entire LKAS11 and CLU11
     self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
     self.lkas11 = None
+    # If non-lkas not true copy as normal
     if not self.CP_SP.flags & HyundaiFlagsSP.NON_LKAS.value:
       self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
     self.clu11 = copy.copy(cp.vl["CLU11"])

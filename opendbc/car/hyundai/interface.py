@@ -113,7 +113,7 @@ class CarInterface(CarInterfaceBase):
 
       # These cars dont have LKAS steering equipped from factory
       if 0x340 not in fingerprint[2]:
-        ret.spFlags |= HyundaiFlagsSP.NON_LKAS.value
+        ret.flags |= HyundaiFlagsSP.NON_LKAS.value
 
     # Common lateral control setup
 
