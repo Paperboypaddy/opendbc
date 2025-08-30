@@ -11,7 +11,26 @@ def create_lkas11(packer, frame, CP, apply_torque, steer_req,
                   left_lane, right_lane,
                   left_lane_depart, right_lane_depart,
                   lkas_icon):
-  keys = [
+  if not lkas11:
+          values = {
+        "CF_Lkas_LdwsActivemode": 0,
+        "CF_Lkas_LdwsSysState": 0,
+        "CF_Lkas_SysWarning": 0,
+        "CF_Lkas_LdwsLHWarning": 0,
+        "CF_Lkas_LdwsRHWarning": 0,
+        "CF_Lkas_HbaLamp": 0,
+        "CF_Lkas_FcwBasReq": 0,
+        "CF_Lkas_HbaSysState": 0,
+        "CF_Lkas_FcwOpt": 0,
+        "CF_Lkas_HbaOpt": 0,
+        "CF_Lkas_FcwSysState": 0,
+        "CF_Lkas_FcwCollisionWarning": 0,
+        "CF_Lkas_FusionState": 0,
+        "CF_Lkas_FcwOpt_USM": 0,
+        "CF_Lkas_LdwsOpt_USM": 2,
+      }
+  else:
+        values = {s: lkas11[s] for s in [
       "CF_Lkas_LdwsActivemode",
       "CF_Lkas_LdwsSysState",
       "CF_Lkas_SysWarning",
@@ -27,12 +46,8 @@ def create_lkas11(packer, frame, CP, apply_torque, steer_req,
       "CF_Lkas_FusionState",
       "CF_Lkas_FcwOpt_USM",
       "CF_Lkas_LdwsOpt_USM",
-  ]
+    ]}
 
-  defaults = {k: 0 for k in keys}
-  defaults["CF_Lkas_LdwsOpt_USM"] = 2  # the only special default for Non-LKAS
-
-  values = {k: lkas11.get(k, defaults[k]) for k in keys}
   values["CF_Lkas_LdwsSysState"] = sys_state
   values["CF_Lkas_SysWarning"] = 3 if sys_warning else 0
   values["CF_Lkas_LdwsLHWarning"] = left_lane_depart
