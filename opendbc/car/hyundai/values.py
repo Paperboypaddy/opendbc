@@ -612,6 +612,12 @@ class CAR(Platforms):
     flags=HyundaiFlags.CHECKSUM_CRC8,
     sp_flags=HyundaiFlagsSP.NON_SCC,
   )
+  HYUNDAI_IONIQ_NON_LKAS = HyundaiPlatformConfig(
+    [HyundaiCarDocs("Hyundai Ioniq Hybrid Non-LKAS 2017-19", "No Lane Keep Assist Systems (LKAS)", car_parts=CarParts.common([CarHarness.hyundai_c]))],
+    HYUNDAI_IONIQ.specs,
+    flags=HyundaiFlags.HYBRID | HyundaiFlags.MIN_STEER_32_MPH,
+    spFlags=HyundaiFlagsSP.NON_SCC | HyundaiFlagsSP.NON_SCC_RADAR_FCA | HyundaiFlagsSP.NON_LKAS
+  )
   HYUNDAI_KONA_NON_SCC = HyundaiPlatformConfig(
     [HyundaiCarDocs("Hyundai Kona Non-SCC 2019", "No Smart Cruise Control (Non-SCC)", car_parts=CarParts.common([CarHarness.hyundai_b]))],
     HYUNDAI_KONA.specs,

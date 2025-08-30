@@ -111,6 +111,10 @@ class CarInterface(CarInterfaceBase):
       if 0x391 in fingerprint[0]:
         ret.flags |= HyundaiFlags.HAS_LDA_BUTTON.value
 
+      # These cars dont have LKAS steering equipped from factory
+      if 0x340 not in fingerprint[2]:
+        ret.spFlags |= HyundaiFlagsSP.NON_LKAS.value
+
     # Common lateral control setup
 
     ret.centerToFront = ret.wheelbase * 0.4

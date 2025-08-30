@@ -29,3 +29,4 @@ class HyundaiFlagsSP(IntFlag):
   NON_SCC = 2 ** 6
   NON_SCC_RADAR_FCA = 2 ** 7  # most with FCA come from the camera
   NON_SCC_NO_FCA = 2 ** 8  # not all have FCA
+  NON_LKAS = 2 ** 9
